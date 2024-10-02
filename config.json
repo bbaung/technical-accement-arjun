@@ -1,0 +1,16 @@
+{
+    "output": {
+        "dist": "./dist",
+        "build": "./build"
+    },
+    "logger": {
+        "info": false,
+        "log": true
+    },
+    "app": {
+        "port": 5000
+    },
+    "sitemap": {
+        "url": "https://devhtml.visibleone.io/devhtml/"
+    }
+}

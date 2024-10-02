@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "settings": {
+      "layout": {
+        "xs": "480px",
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1366px",
+        "3xl": "1440px",
+        "4xl": "1536px",
+        "5xl": "1680px",
+        "6xl": "1920px",
+        "4k" : "2560px"
+      },
+      "color": {
+        "palette": [
+          {
+            "name": "Primary",
+            "slug": "primary",
+            "color": "#758592"
+          }
+        ]
+      },
+      "typography": {
+        "fontSizes": []
+      }
+    }
+  }
+  
+  
