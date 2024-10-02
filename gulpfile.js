@@ -24,6 +24,7 @@ const PORT = config.app.port
 
 // Utils
 const logger = require("./src/utils/logger");
+const sitemap = require('gulp-sitemap')
 
 async function cleanUp() {
     logger.info(`Cleaning up ${filePath} for fresh start`)
@@ -131,6 +132,16 @@ function watchFiles(done) {
 
 function generateSiteMap(done) {
     if (!isProduction) return done()
+
+    return src(['build/**/*.html'], {
+        read: false 
+    })
+    .pipe(sitemap({
+        siteUrl: config.sitemap.url
+    }))
+    .pipe(dest(
+        `${filePath}`
+    ))
 }
 
 gulp.task('default',
