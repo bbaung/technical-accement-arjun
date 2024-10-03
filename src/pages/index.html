@@ -8,7 +8,9 @@
     @@beforeScript;
 </head>
 <body class="flex flex-col justify-between">
-    @@include("slices/base-slice/base-slice.html"); 
+    @@include("slices/base-slice/base-slice.html", {
+        text: "It is the base slice"
+    }); 
 
     <script src="/js/script.js"></script>    
 </body>

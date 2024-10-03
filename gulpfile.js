@@ -52,7 +52,12 @@ function prepareHTML() {
 
     return src([
         'src/pages/**/*.html',
-    ])
+    ])    
+    .pipe(fileInclude({
+        prefix: "@@",
+        suffix: ';',
+        basepath: "./src"
+    }))
     .pipe(map(function(file, done) {
         const fileContent = file.contents.toString() 
 
@@ -61,11 +66,6 @@ function prepareHTML() {
         file.contents = Buffer.from(newFileContent);
 
         done(false, file)
-    }))
-    .pipe(fileInclude({
-        prefix: "@@",
-        suffix: ';',
-        basepath: "./src"
     }))
     .pipe(dest(filePath))
 }
@@ -210,10 +210,21 @@ function generateSiteMap(done) {
 
 gulp.task('default',
     series(
-        cleanUp.bind({ filePath: config.output.dist }), 
+        cleanUp, 
         parallel(prepareHTML, prepareStyles, prepareBeforeScripts, prepareScripts, prepareFiles),
         livePreview, 
         watchFiles,
         generateSiteMap
     )
 )
+
+// gulp.task('build:wp', 
+//     series(
+//         wpCleanUp,
+//         generateBlocksJSON,
+//         generateScripts,
+//         generateStyles,
+//         generateFiles,
+//         generateDataBindCodes
+//     )
+// )

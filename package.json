@@ -26,7 +26,8 @@
   },
   "scripts": {
     "dev": "gulp",
-    "build": "NODE_ENV=production gulp"
+    "build": "NODE_ENV=production gulp",
+    "build:wp": "gulp build:wp"
   },
   "engines": {
     "node": ">=18.0.0"
