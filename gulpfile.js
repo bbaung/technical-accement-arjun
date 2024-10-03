@@ -31,7 +31,7 @@ const PORT = config.app.port
 // Utils
 const logger = require("./utils/logger");
 const sitemap = require('gulp-sitemap')
-const directiveReplacer = require('./utils/directivesReplacer');
+const templateStringReplacer = require('./utils/templateStringReplacer.js');
 
 async function cleanUp() {
     logger.info(`Cleaning up ${filePath} for fresh start`)
@@ -56,7 +56,7 @@ function prepareHTML() {
     .pipe(map(function(file, done) {
         const fileContent = file.contents.toString() 
 
-        const newFileContent = directiveReplacer(fileContent)
+        const newFileContent = templateStringReplacer(fileContent)
 
         file.contents = Buffer.from(newFileContent);
 
