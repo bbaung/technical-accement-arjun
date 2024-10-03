@@ -29,7 +29,7 @@ const filePath =  isProduction ? config.output.build : config.output.dist
 const PORT = config.app.port
 
 // Utils
-const logger = require("./src/utils/logger");
+const logger = require("./utils/logger");
 const sitemap = require('gulp-sitemap')
 
 async function cleanUp() {

@@ -1,4 +1,4 @@
-const colorMapper = require('./src/utils/colorMapper')
+const colorMapper = require('./utils/colorMapper')
 const theme = require('./theme.json')
 
 /** @type {import('tailwindcss').Config} */
