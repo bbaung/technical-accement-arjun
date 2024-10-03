@@ -31,6 +31,7 @@ const PORT = config.app.port
 // Utils
 const logger = require("./utils/logger");
 const sitemap = require('gulp-sitemap')
+const directiveReplacer = require('./utils/directivesReplacer');
 
 async function cleanUp() {
     logger.info(`Cleaning up ${filePath} for fresh start`)
@@ -52,6 +53,15 @@ function prepareHTML() {
     return src([
         'src/pages/**/*.html',
     ])
+    .pipe(map(function(file, done) {
+        const fileContent = file.contents.toString() 
+
+        const newFileContent = directiveReplacer(fileContent)
+
+        file.contents = Buffer.from(newFileContent);
+
+        done(false, file)
+    }))
     .pipe(fileInclude({
         prefix: "@@",
         suffix: ';',
@@ -79,14 +89,37 @@ function prepareStyles() {
     )
     .pipe(minifyCss({ compatibility: "ie8" }))
     .pipe(concat({ path: "style.css" }))
-    .pipe(dest(filePath))
+    .pipe(dest(`${filePath}/css`))
+}
+
+function prepareBeforeScripts(done) {
+    logger.info(`Preparing for Head Javascript`)
+
+    return src([
+        'src/scripts/before/**/*.js',        
+    ])
+    .pipe(
+        map(function(file, done) {            
+            const newFileContent = browserify(file.path, {debug: true })
+            .transform('babelify', {
+                presets: ["@babel/preset-env"]
+            })
+            .bundle();
+            file.contents = newFileContent
+            done(false, file)
+        })
+    )
+    .pipe(buffer())    
+    .pipe(terser())
+    .pipe(concat({ path: 'before.js' }))    
+    .pipe(dest(`${filePath}/js/`))
 }
 
 function prepareScripts(done) {
     logger.info(`Preparing Javascript`)
 
     return src([
-        'src/scripts/*.js',
+        'src/scripts/main/**/*.js',
         'src/slices/**/*.js'
     ])
     .pipe(
@@ -101,15 +134,15 @@ function prepareScripts(done) {
         })
     )
     .pipe(buffer())
-    .pipe(concat({ path: 'style.js' }))    
+    .pipe(concat({ path: 'script.js' }))    
     .pipe(terser())
-    .pipe(dest(filePath))
+    .pipe(dest(`${filePath}/js/`))
 }
 
 function prepareFiles(done) {
     logger.info(`Preparing Files`)
 
-    return src('./src/public/**/*').pipe(dest(`${filePath}/public`))
+    return src('./src/public/**/*').pipe(dest(`${filePath}`))
 }
 
 function livePreview(done) {
@@ -149,9 +182,13 @@ function watchFiles(done) {
         series(prepareStyles, previewReload)
     );
     watch(
-        `src/slices/**/*.js`,
+        [`src/slices/**/*.js`, `src/scripts/main/**/*.js`],
         series(prepareScripts, previewReload)
     );
+    watch(
+        [`src/scripts/before/**/*.js`],
+        series(prepareBeforeScripts, previewReload)
+    )
     watch(`src/public/**/*`, series(prepareFiles, previewReload));
 
     logger.log( "Watching for Changes..");
@@ -173,8 +210,8 @@ function generateSiteMap(done) {
 
 gulp.task('default',
     series(
-        cleanUp.bind({ filePath: config.output.dist }),
-        parallel(prepareHTML, prepareStyles, prepareScripts, prepareFiles),
+        cleanUp.bind({ filePath: config.output.dist }), 
+        parallel(prepareHTML, prepareStyles, prepareBeforeScripts, prepareScripts, prepareFiles),
         livePreview, 
         watchFiles,
         generateSiteMap
