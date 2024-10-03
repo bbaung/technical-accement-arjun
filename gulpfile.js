@@ -9,9 +9,12 @@ const fileInclude = require('gulp-file-include');
 
 // CSS Related
 const postcss = require('gulp-postcss')
+const postcssImport = require('postcss-import')
 const minifyCss = require('gulp-clean-css')
 const tailwindcss = require("tailwindcss");
+const tailwindNesting = require('@tailwindcss/nesting')
 const tailwindConfig = require("./tailwind.config.js");
+const autoprefixer = require('autoprefixer')
 
 // JS Related
 const terser = require('gulp-terser');
@@ -61,7 +64,16 @@ function prepareStyles() {
         'src/styles/*.css',
         'src/slices/**/*.css'
     ])
-    .pipe(postcss([tailwindcss(tailwindConfig)]))
+    .pipe(
+        postcss(
+            [
+                postcssImport(), 
+                tailwindNesting(),
+                tailwindcss(tailwindConfig),     
+                autoprefixer()           
+            ]
+        )
+    )
     .pipe(minifyCss({ compatibility: "ie8" }))
     .pipe(concat({ path: "style.css" }))
     .pipe(dest(filePath))
@@ -74,8 +86,8 @@ function prepareScripts(done) {
         'src/scripts/*.js',
         'src/slices/**/*.js'
     ])
+    .pipe(concat({ path: "script.js" }))   
     .pipe(terser())
-    .pipe(concat({ path: "script.js" }))
     .pipe(dest(filePath))
 }
 

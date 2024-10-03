@@ -4,6 +4,8 @@
   "description": "TailwindCSS HTML Sections",
   "main": "gulpfile.js",
   "devDependencies": {
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+    "autoprefixer": "^10.4.20",
     "browser-sync": "^3.0.3",
     "gulp": "^5.0.0",
     "gulp-clean-css": "^4.3.0",
@@ -13,6 +15,7 @@
     "gulp-sitemap": "^8.0.0",
     "gulp-terser": "^2.1.0",
     "postcss": "^8.4.47",
+    "postcss-import": "^16.1.0",
     "tailwindcss": "^3.4.13"
   },
   "scripts": {
