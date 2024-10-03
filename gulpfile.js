@@ -3,6 +3,8 @@ const { series, parallel, src, dest, watch } = gulp
 const concat = require('gulp-concat')
 const fs = require('fs').promises;
 const browserSync = require("browser-sync");
+const map = require('map-stream')
+const buffer = require('gulp-buffer')
 
 // HTML Related
 const fileInclude = require('gulp-file-include');
@@ -18,6 +20,7 @@ const autoprefixer = require('autoprefixer')
 
 // JS Related
 const terser = require('gulp-terser');
+const browserify = require('browserify');
 
 // Configs
 const config = require('./config.json')
@@ -86,7 +89,19 @@ function prepareScripts(done) {
         'src/scripts/*.js',
         'src/slices/**/*.js'
     ])
-    .pipe(concat({ path: "script.js" }))   
+    .pipe(
+        map(function(file, done) {            
+            const newFileContent = browserify(file.path, {debug: true })
+            .transform('babelify', {
+                presets: ["@babel/preset-env"]
+            })
+            .bundle();
+            file.contents = newFileContent
+            done(false, file)
+        })
+    )
+    .pipe(buffer())
+    .pipe(concat({ path: 'style.js' }))    
     .pipe(terser())
     .pipe(dest(filePath))
 }
