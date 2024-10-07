@@ -32,6 +32,8 @@ const PORT = config.app.port
 const logger = require("./utils/logger");
 const sitemap = require('gulp-sitemap')
 const templateStringReplacer = require('./utils/templateStringReplacer.js');
+const rename = require('gulp-rename')
+const parsePath = require('./utils/parsePath.js')
 
 async function cleanUp() {
     logger.info(`Cleaning up ${filePath} for fresh start`)
@@ -218,13 +220,176 @@ gulp.task('default',
     )
 )
 
-// gulp.task('build:wp', 
-//     series(
-//         wpCleanUp,
-//         generateBlocksJSON,
-//         generateScripts,
-//         generateStyles,
-//         generateFiles,
-//         generateDataBindCodes
-//     )
-// )
+const WP_GENERATE_FOLDER = "./wp"
+const WP_THEME_NAME = "wordpress-tailwind-base-theme"
+
+async function cleanUpWp(done) {
+    logger.info(`Cleaning up ${WP_GENERATE_FOLDER} for fresh start`)
+
+    try {
+        return await fs.rmdir(WP_GENERATE_FOLDER, { force: true, recursive: true });   
+    } catch (e) {
+        if (e.code === "ENOENT") {
+            // If the file not exist, return true
+            return true
+        } 
+        throw e
+    }   
+}
+
+function generateBlocksWp(done) {
+    return src(['src/slices/**/*.html'])
+    .pipe(fileInclude({
+        prefix: "@@",
+        suffix: ';',
+        basepath: "./src"
+    }))
+    .pipe(map(function(file, done) {
+        const fileContent = file.contents.toString() 
+
+        let newFileContent = templateStringReplacer(fileContent)
+
+        newFileContent = `<?php if ( ! defined( 'ABSPATH' ) ) { exit; // Exit if accessed directly } ?> \n` + newFileContent
+
+        file.contents = Buffer.from(newFileContent);
+
+        done(false, file)
+    }))
+    .pipe(rename(function(path) {
+        return {
+            dirname: path.dirname,
+            basename: path.basename, 
+            extname: ".php"
+        };
+    }))
+    .pipe(dest(`${WP_GENERATE_FOLDER}/blocks`))   
+}
+
+function generateBlocksJSONWp(done) {
+    return src(['src/slices/**/*.html'])
+    .pipe(fileInclude({
+        prefix: "@@",
+        suffix: ';',
+        basepath: "./src"
+    }))
+    .pipe(map(function(file, done) {
+        const filePathInfo = parsePath(file.relative)
+
+        const newFileContent = JSON.stringify({
+            name: `vo-custom-blocks/${filePathInfo.basename}`,
+            title: `${filePathInfo.basename}`,
+            description: `A custom vo block - ${filePathInfo.basename}`,
+            category: "vo-custom-blocks",
+            icon: "block-default",
+            keywords: ["base"],
+            acf: {
+                mode: "preview",
+                renderTemplate: `${filePathInfo.basename}.php`
+            },
+            supports: {
+                anchor: true
+            }
+        }, 0, 2)
+
+        file.contents = Buffer.from(newFileContent);
+
+        done(false, file)
+    }))
+    .pipe(rename(function(path) {           
+        return {
+            dirname: path.dirname,
+            basename: path.basename, 
+            extname: ".json"            
+        };
+    }))    
+    .pipe(dest(`${WP_GENERATE_FOLDER}/blocks`))    
+}
+
+function generateBeforeScriptsWp(done) {
+    logger.info(`Preparing for Head Javascript`)
+
+    return src([
+        'src/scripts/before/**/*.js',        
+    ])
+    .pipe(
+        map(function(file, done) {            
+            const newFileContent = browserify(file.path, {debug: true })
+            .transform('babelify', {
+                presets: ["@babel/preset-env"]
+            })
+            .bundle();
+            file.contents = newFileContent
+            done(false, file)
+        })
+    )
+    .pipe(buffer())    
+    .pipe(terser())
+    .pipe(concat({ path: 'before.js' }))    
+    .pipe(dest(`${WP_GENERATE_FOLDER}/js/`))
+}
+
+function generateScriptsWp(done) {
+    logger.info(`Preparing WP Javascript`)
+
+    return src([
+        'src/scripts/main/**/*.js',
+        'src/slices/**/*.js'
+    ])
+    .pipe(
+        map(function(file, done) {            
+            const newFileContent = browserify(file.path, {debug: true })
+            .transform('babelify', {
+                presets: ["@babel/preset-env"]
+            })
+            .bundle();
+            file.contents = newFileContent
+            done(false, file)
+        })
+    )
+    .pipe(buffer())
+    .pipe(concat({ path: 'script.js' }))    
+    .pipe(terser())
+    .pipe(dest(`${WP_GENERATE_FOLDER}/js/`))
+}
+
+function generateStylesWp(done) {
+    let wpTailWindConfig = {
+        ...tailwindConfig
+    }
+
+    wpTailWindConfig.content = [
+        // "./src/pages/**/*.html",
+        "./src/slices/**/*.html"
+      ];
+
+    return src([
+        'src/styles/*.css',
+        'src/slices/**/*.css'
+    ])
+    .pipe(
+        postcss(
+            [
+                postcssImport(), 
+                tailwindNesting(),
+                tailwindcss(wpTailWindConfig),     
+                autoprefixer()           
+            ]
+        )
+    )
+    .pipe(minifyCss({ compatibility: "ie8" }))
+    .pipe(concat({ path: "style.css" }))
+    .pipe(dest(`${WP_GENERATE_FOLDER}/css`))
+}
+
+function generateFilesWp() {
+    logger.info(`Preparing Files`)
+
+    return src('./src/public/**/*').pipe(dest(`${WP_GENERATE_FOLDER}`))
+}
+
+gulp.task('build:wp', 
+    series(
+        cleanUpWp,
+        parallel(generateBlocksWp, generateBlocksJSONWp, generateBeforeScriptsWp, generateScriptsWp,generateStylesWp,generateFilesWp),        
+    )
+)

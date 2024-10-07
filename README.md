@@ -25,6 +25,7 @@ This project aim to simplify the HTML development through `gulp`.
 - [ ] Setup CI CD
 - [ ] Setup CLI
 - [ ] Setup Docs
+- [ ] add build:wp gulp task to generate the wordpress
 
 ## Technlogies
 

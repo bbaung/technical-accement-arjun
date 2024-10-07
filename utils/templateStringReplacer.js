@@ -12,7 +12,6 @@ const customDirectives = [
             const matches = updatedString.matchAll(regex)
 
             for (const match of matches) {
-                console.log("[MATCH]",match)
                 updatedString = updatedString.replaceAll(match[0], match[1])   
             }            
 
