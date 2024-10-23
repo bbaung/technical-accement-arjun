@@ -78,7 +78,10 @@ function prepareStyles() {
     return src([
         'src/styles/*.css',
         'src/slices/**/*.css'
-    ])
+    ], {
+        debug: true
+    })
+    .pipe(concat({ path: "style.css" }))
     .pipe(
         postcss(
             [
@@ -90,7 +93,6 @@ function prepareStyles() {
         )
     )
     .pipe(minifyCss({ compatibility: "ie8" }))
-    .pipe(concat({ path: "style.css" }))
     .pipe(dest(`${filePath}/css`))
 }
 
