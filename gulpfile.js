@@ -144,7 +144,7 @@ function prepareScripts(done) {
 function prepareFiles(done) {
     logger.info(`Preparing Files`)
 
-    return src('./src/public/**/*').pipe(dest(`${filePath}`))
+    return src('./src/public/**/*', { encoding: false }).pipe(dest(`${filePath}`))
 }
 
 function livePreview(done) {
