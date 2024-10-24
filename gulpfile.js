@@ -115,7 +115,7 @@ function prepareBeforeScripts(done) {
     )
     .pipe(buffer())    
     .pipe(terser())
-    .pipe(concat({ path: 'before.js' }))    
+    .pipe(concat('before.js', { newLine: ';' }))
     .pipe(dest(`${filePath}/js/`))
 }
 
@@ -138,7 +138,7 @@ function prepareScripts(done) {
         })
     )
     .pipe(buffer())
-    .pipe(concat({ path: 'script.js' }))    
+    .pipe(concat('script.js', { newLine: ';' }))
     .pipe(terser())
     .pipe(dest(`${filePath}/js/`))
 }
@@ -326,7 +326,7 @@ function generateBeforeScriptsWp(done) {
     )
     .pipe(buffer())    
     .pipe(terser())
-    .pipe(concat({ path: 'before.js' }))    
+    .pipe(concat('before.js', { newLine: ';' }))
     .pipe(dest(`${WP_GENERATE_FOLDER}/js/`))
 }
 
@@ -349,7 +349,7 @@ function generateScriptsWp(done) {
         })
     )
     .pipe(buffer())
-    .pipe(concat({ path: 'script.js' }))    
+    .pipe(concat('script.js', { newLine: ';' }))
     .pipe(terser())
     .pipe(dest(`${WP_GENERATE_FOLDER}/js/`))
 }
