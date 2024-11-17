@@ -38,4 +38,9 @@
         @apply text-[48px] font-semibold leading-normal;
     }
 
+    .heading3{
+        font-family: "Inter", sans-serif;  
+        @apply text-[24px] font-semibold leading-8;
+    }
+
   }

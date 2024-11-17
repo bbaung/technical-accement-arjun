@@ -4,10 +4,10 @@
 </section> -->
 
 <header class="container bg-white">
-    <div class="container-sm justify-between my-10 flex flex-row">
-        <img class="w-[110px] h-[30px]" src="@@public('/images/Foodieland.svg');" alt="logo-img">
+    <div class="container 3xl:container-sm flex justify-between my-10 flex-row relative">
+        <img class="w-[110px] h-[30px] self-center" src="@@public('/images/Foodieland.svg');" alt="logo-img">
 
-        <div class="flex flex-row gap-[60px] text-black text-[16px] font-medium leading-normal">
+        <div class="hidden lg:flex flex-row gap-[60px] text-black text-[16px] font-medium leading-normal items-center	">
             <a href="#"><p>Home</p></a>
             <a href="#"><p>Recipes</p></a>
             <a href="#"><p>Blog</p></a>
@@ -15,7 +15,25 @@
             <a href="#"><p>About us</p></a>
         </div>
 
-        <img src="@@public('/images/Social.svg');" alt="social-icons">
+        <img class="hidden lg:block" src="@@public('/images/Social.svg');" alt="social-icons">
+
+        <!-- mobile menu -->
+        <div class="header-humbager static lg:hidden">
+            <div class="menu_icon_box">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+    
+            <div class="box">
+                <a href="#"><p>Home</p></a>
+                <a href="#"><p>Recipes</p></a>
+                <a href="#"><p>Blog</p></a>
+                <a href="#"><p>Contact</p></a>
+                <a href="#"><p>About us</p></a>
+            </div>
+            
+        </div>
 
     </div>
 

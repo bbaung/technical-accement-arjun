@@ -1,0 +1,59 @@
+.header-humbager .box{
+    @apply hidden;
+}
+
+.header-humbager .active.box{
+    @apply block bg-green-300 absolute right-1 w-[200px] rounded-lg;
+    @apply z-10 ;
+}
+
+
+.header-humbager .menu_icon_box{
+    z-index: 2;
+    width: fit-content;
+    height: auto;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.header-humbager .line1 ,.header-humbager .line2 ,.header-humbager .line3 {
+    width: 40px;
+    height: 4px;
+    margin: 10px 4px;
+    background-color: black;
+    border-radius: 50px;
+    transition: 0.2s;
+}
+
+.header-humbager .active .line1{
+    transform: translate(0px, 15px)rotate(45deg);
+}
+
+.header-humbager .active .line2{
+    opacity: 0;
+}
+
+.header-humbager .active .line3{
+    transform: translate(0px, -15px)rotate(-45deg);
+}
+
+.header-humbager a{
+    list-style: none;
+    margin-bottom: 30px;
+    transition: 0.3s;
+}
+
+.header-humbager a:hover{
+    background-color: gray;
+    border-radius: 8px;
+} 
+
+.header-humbager a {
+    color: black;
+    font-size: 28px;
+    padding: 10px 30px;
+    display: block;
+    text-decoration: none;
+}
