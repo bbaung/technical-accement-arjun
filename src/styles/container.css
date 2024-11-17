@@ -1,0 +1,35 @@
+/* This is SCSS Syntax */
+:root {
+    --container: 1760px;
+    --container-md: 1440px;
+    --container-sm: 1280px;
+
+    --container-md-px: 8.13953488372%;
+    --container-sm-px: 12.7906976744%;
+  }
+  
+  .container {
+    max-width: 1760px;
+    width: 100%;
+    padding: 0 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media screen(sm) {
+    .container-md {
+      padding-left: var(--container-md-px);
+      padding-right: var(--container-md-px);
+    }
+
+    .container-sm {
+        padding-left: var(--container-sm-px);
+        padding-right: var(--container-sm-px);
+      }
+  }
+  
+  /* @media screen(sm) {
+    .container-sm {
+      padding: 0 var(--container-sm-px);
+    }
+  } */
+  

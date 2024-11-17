@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import 'font.css';
+@import '01_swiper.css';
+@import 'container.css';
+

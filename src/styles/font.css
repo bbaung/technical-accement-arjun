@@ -1,0 +1,41 @@
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lobster&display=swap');
+
+  @font-face {
+    font-family: "Inter", sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lobster&display=swap') format("opentype");
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Source Han Sans TC";
+    src: url("../fonts/Eudoxus-Sans-Font-Family/EudoxusSans-Regular-BF659b6cb1d4714.ttf") format("opentype");
+}
+  
+
+
+  @layer components {
+    body{
+        @apply font-primary text-[16px];   
+    }
+
+    .font-primary {
+        font-family: "Inter", sans-serif;   
+    }
+
+    .footer-font{
+        font-family: "EudoxusSans-Regular-BF659b6cb1d4714.ttf", sans-serif;
+        @apply text-[18px] font-normal leading-normal text-black text-opacity-60;
+    }
+
+    .heading1{
+        font-family: "Inter", sans-serif;  
+        @apply text-[64px] font-semibold leading-normal; 
+    }
+
+    .heading2{
+        font-family: "Inter", sans-serif;  
+        @apply text-[48px] font-semibold leading-normal;
+    }
+
+  }

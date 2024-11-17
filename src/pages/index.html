@@ -3,14 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base HTML</title>
+    <title>Foodieland.</title>
     <link rel="stylesheet" href="/css/style.css">
     @@beforeScript;
 </head>
 <body class="flex flex-col justify-between">
-    @@include("slices/base-slice/base-slice.html", {
+    <!-- @@include("slices/base-slice/base-slice.html", {
         text: "It is the base slice"
-    }); 
+    });  -->
+
+    @@include("slices/header/header.html", {
+    });
+
+    @@include("slices/e-mail-box/e-mail-box.html", {
+    });
+
+    @@include("slices/categories/categories.html", {
+    });
+
+    @@include("slices/e-mail-box/e-mail-box.html", {
+    });
+
+    @@include("slices/footer/footer.html", {
+    });
 
     <script src="/js/script.js"></script>    
 </body>
